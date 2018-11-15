@@ -1,0 +1,25 @@
+.table-link {
+    text-decoration: none;
+    margin-left: 2px;
+    margin-right: 2px;
+}
+.search-box {
+    background: rgba(0,0,0,0.25);
+    border-radius: 5px;
+    padding-left:10px;
+    padding-right: 10px;
+}
+.search-box input{
+    font-size: 12px;
+    color: #fff;
+}
+.table-wrapper{
+    overflow-x:auto;
+}
+.float-button {
+    position: absolute;
+    right: 50px;
+}
+.table-row {
+    position:relative;
+}

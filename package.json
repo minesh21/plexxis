@@ -1,0 +1,30 @@
+{
+  "name": "plex-employees",
+  "version": "0.1.0",
+  "license": "None provided",
+  "private": true,
+  "dependencies": {
+    "@material-ui/core": "^3.4.0",
+    "@material-ui/icons": "^3.0.1",
+    "axios": "^0.18.0",
+    "body-parser": "^1.18.3",
+    "bootstrap": "^4.1.3",
+    "concurrently": "^3.6.0",
+    "cors": "^2.8.4",
+    "express": "^4.16.3",
+    "nodemon": "^1.17.5",
+    "react": "^16.4.1",
+    "react-color": "^2.14.1",
+    "react-dom": "^16.4.1",
+    "react-scripts": "1.1.4"
+  },
+  "scripts": {
+    "start": "concurrently --kill-others \"nodemon server\" \"npm run start:react-app\"",
+    "start:react-app": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject",
+    "custom:build": "nodemon src/scripts/build.js --watch src/data --ext .md",
+    "custom:start": "concurrently --kill-others \"npm run custom:build\" \"npm run start\""
+  }
+}
