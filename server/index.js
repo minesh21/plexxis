@@ -44,15 +44,27 @@ app.post('/api/add/employees', (req, res) => {
 
 });
 
-app.put('/api/employees/:id', (req, res) => {
+app.put('/api/edit/employees/:id', (req, res) => {
   const id = req.params.id;
+  console.log(req.body);
+  console.log(`Editing employee with id: ${id}`);
+  const index = employees.findIndex(g => g.id === parseInt(id, 10));
+  console.log(index);
+  employees[index].name = req.body.name;
+  employees[index].profession = req.body.profession;
+  employees[index].color = req.body.color;
+  employees[index].city = req.body.city;
+  employees[index].branch = req.body.branch;
+  employees[index].assigned = req.body.assigned;
+
+  res.status(200).json(employees);
 });
 
 app.post('/api/delete/employees', (req, res) => {
   console.log('Deleting employees', req.body);
   const employeeIds = req.body.ids;
   for (let i = 0; i < employeeIds.length; i++) {
-    const index = employees.findIndex(g => g._id === employeeIds[i]);
+    const index = employees.findIndex(g => g.id === employeeIds[i]);
     employees.splice(index, 1);
   }
   res.status(200).json(employees);

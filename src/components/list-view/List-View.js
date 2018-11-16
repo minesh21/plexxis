@@ -15,13 +15,12 @@ import {
   InputBase,
   Menu,
   MenuItem,
-  TextField,
 } from '@material-ui/core'
 import {Check, Close, PersonAdd, Delete, ViewColumn, FilterList, Edit} from '@material-ui/icons';
 import AddDialog  from '../dialogs/add-dialog/add-dialog';
 import DeleteDialog from '../dialogs/delete-dialog/delete-dialog';
+import EditDialog from '../dialogs/edit-dialog/edit-dialog';
 import './List-View.css'
-import { PhotoshopPicker } from 'react-color';
 class ListView extends React.Component {
     state = {
       selected: [],
@@ -30,7 +29,9 @@ class ListView extends React.Component {
       selectedAll: false,
       openAddDialog: false,
       openDeleteDialog: false,
+      openEditDialog: false,
       anchorEl: null,
+      employee: null,
       menuItems: {
         id: true,
         name: true,
@@ -84,7 +85,7 @@ class ListView extends React.Component {
 
     handleUpdate = data => {
 
-      if (data.action === 'delete') {
+      if (data.action === 'delete' || data.action === 'edit') {
         this.setState({text: ''});
         this.setState({selected: []});
       }
@@ -109,9 +110,12 @@ class ListView extends React.Component {
     this.setState({ anchorEl: event.currentTarget });
   };
 
+  setActiveEdit(employee) {
+    this.setState({employee});
+  };
 
   render() {
-       const {selected, selectAll, text, openAddDialog, openDeleteDialog, anchorEl, menuItems, editable} = this.state;
+       const {selected, selectAll, text, openAddDialog, openDeleteDialog, openEditDialog, anchorEl, menuItems, employee} = this.state;
        const open = Boolean(anchorEl);
        let employees = this.props.employees;
        return(
@@ -153,15 +157,6 @@ class ListView extends React.Component {
                                       }
                                     </Menu>
 
-                                    <Tooltip title="Show/Hide Columns">
-                                      <IconButton aria-owns={open ? 'menu-appbar' : undefined}
-                                                  aria-haspopup="true"
-                                                  onClick={this.handleMenu}
-                                                  color="inherit">
-                                        <ViewColumn />
-                                      </IconButton>
-                                    </Tooltip>
-
                                         {selected.length === 0 ?
                                             <Tooltip title="Add Employee">
                                                 <IconButton color="inherit" onClick={() => {this.handleOpenDialog('openAddDialog')}}>
@@ -169,23 +164,12 @@ class ListView extends React.Component {
                                                 </IconButton>
                                             </Tooltip>:
                                             <div>
-                                              {
-                                                selected.length === 1 ?
-
-                                                <Tooltip title="Edit selection">
-                                                  <IconButton color="inherit">
-                                                    <Edit/>
-                                                  </IconButton>
-                                                </Tooltip> :
-                                                ''
-                                              }
                                               <Tooltip title="Delete selected">
                                                 <IconButton color="inherit" onClick={() => {this.handleOpenDialog('openDeleteDialog')}}>
                                                   <Delete />
                                                 </IconButton>
                                               </Tooltip>
                                             </div>
-
                                         }
                                 </Toolbar>
                            </AppBar>
@@ -205,6 +189,7 @@ class ListView extends React.Component {
                                  <TableCell>City</TableCell>
                                  <TableCell>Branch</TableCell>
                                  <TableCell>Assigned</TableCell>
+                                 <TableCell>Edit?</TableCell>
                                </TableRow>
                              </TableHead>
                              <TableBody>
@@ -217,7 +202,7 @@ class ListView extends React.Component {
                                                            checked={isSelected}/>
                                      </TableCell>}
                                      {<TableCell>{employee.id}</TableCell>}
-                                     {<TableCell>{isSelected ? null : employee.name}</TableCell>}
+                                     {<TableCell>{employee.name}</TableCell>}
                                      {<TableCell>{employee.code}</TableCell>}
                                      {<TableCell>{employee.profession}</TableCell>}
                                      {<TableCell>
@@ -228,6 +213,15 @@ class ListView extends React.Component {
                                      {<TableCell>
                                        {employee.assigned ? <Check /> : <Close/>}
                                      </TableCell>}
+                                     {
+                                       <TableCell>
+                                         <Tooltip title="Edit selection">
+                                           <IconButton color="inherit" onClick={() => {this.setActiveEdit(employee);  this.handleOpenDialog('openEditDialog');}}>
+                                             <Edit/>
+                                           </IconButton>
+                                        </Tooltip>
+                                       </TableCell>
+                                     }
                                    </TableRow>
                                  })
                                }
@@ -257,6 +251,7 @@ class ListView extends React.Component {
 
                }
                <AddDialog open={openAddDialog} close={this.handleCloseDialog} update={this.handleUpdate}/>
+               <EditDialog open={openEditDialog} employee={employee} close={this.handleCloseDialog} update={this.handleUpdate}/>
                <DeleteDialog open={openDeleteDialog} close={this.handleCloseDialog} update={this.handleUpdate} ids={selected}/>
            </div>
 
