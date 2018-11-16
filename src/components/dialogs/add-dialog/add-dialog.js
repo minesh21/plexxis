@@ -11,7 +11,7 @@ import {
     MenuItem
 } from '@material-ui/core'
 import './add-dialog.css';
-import { SketchPicker } from 'react-color'
+import { HuePicker } from 'react-color'
 import axios from 'axios';
 class AddDialog extends React.Component {
     state = {
@@ -49,9 +49,19 @@ class AddDialog extends React.Component {
     };
 
     handleAssignedChange = event => {
-        console.log(event.target.value);
         this.setState({assigned: event.target.value});
     };
+
+    isAllEmpty () {
+      return (
+      this.state.name === '' ||
+      this.state.profession === '' ||
+      this.state.color === '' ||
+      this.state.city === '' ||
+      this.state.branch === '' ||
+      this.state.assigned === null
+      )
+    }
 
     addEmployee = () => {
         axios.post('http://localhost:8080/api/add/employees', this.state, {withCredentials: true, headers: {
@@ -91,7 +101,9 @@ class AddDialog extends React.Component {
                         <DialogContentText>
                             Pick a color of your choice
                         </DialogContentText>
-                            <SketchPicker color={color} onChangeComplete={this.handleColorChange}/>
+                            <HuePicker className="full-width" color={color} onChangeComplete={this.handleColorChange}/>
+                            <div style={{width: "30px", height: '10px', backgroundColor: color, marginTop: '5px'}}/>
+                            <TextField disabled value={color} className="full-width"/>
                             <TextField id="employee_city"
                                        value={city}
                                        onChange={this.handleCityChange}
@@ -126,7 +138,7 @@ class AddDialog extends React.Component {
                         <Button onClick={() => {this.handleCloseDialog()}} color="primary">
                             Cancel
                         </Button>
-                        <Button  onClick={() => {this.addEmployee()}} color="primary">
+                        <Button  onClick={() => {this.addEmployee()}} color="primary" disabled={this.isAllEmpty()}>
                             Add
                         </Button>
                     </DialogActions>
