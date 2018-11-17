@@ -15,6 +15,7 @@ import {
   InputBase,
   Menu,
   MenuItem,
+  TableSortLabel
 } from '@material-ui/core'
 import {Check, Close, PersonAdd, Delete, ViewColumn, FilterList, Edit} from '@material-ui/icons';
 import AddDialog  from '../dialogs/add-dialog/add-dialog';
@@ -42,6 +43,8 @@ class ListView extends React.Component {
         branch: true,
         assigned: true},
       editable: [],
+      sortById : false,
+      orderBy: 'asc'
     };
 
     onSelectAll = value => event => {
@@ -114,10 +117,26 @@ class ListView extends React.Component {
     this.setState({employee});
   };
 
+  handleIdSortChange = event => {
+    if (this.state.orderBy === 'asc') {
+      this.setState({orderBy: 'desc'})
+    } else {
+      this.setState({orderBy: 'asc'})
+    }
+
+  }
+
   render() {
-       const {selected, selectAll, text, openAddDialog, openDeleteDialog, openEditDialog, anchorEl, menuItems, employee} = this.state;
+       const {selected, selectAll, text, openAddDialog, openDeleteDialog, openEditDialog, anchorEl, menuItems, employee, sortById, orderBy} = this.state;
        const open = Boolean(anchorEl);
        let employees = this.props.employees;
+      employees.sort((a,b) => {
+        if (orderBy === 'desc') {
+          return b.id - a.id;
+        } else {
+          return a.id - b.id;
+        }
+      });
        return(
            <div className="full-width">
                {
@@ -181,7 +200,18 @@ class ListView extends React.Component {
                                    <Checkbox checked={selected.length === this.props.employees.length}
                                              onChange={this.onSelectAll(!selectAll)}/>
                                  </TableCell>
-                                 <TableCell>id</TableCell>
+                                 <TableCell sortDirection={orderBy}>
+                                   <Tooltip
+                                   active={true}
+                                   title="Sort"
+                                   enterDelay={300}>
+                                     <TableSortLabel
+                                     direction={orderBy}
+                                     onClick={() => {this.handleIdSortChange()}}>
+                                      id
+                                     </TableSortLabel>
+                                   </Tooltip>
+                                 </TableCell>
                                  <TableCell>Name</TableCell>
                                  <TableCell>Code</TableCell>
                                  <TableCell>Profession</TableCell>
@@ -211,7 +241,7 @@ class ListView extends React.Component {
                                      {<TableCell>{employee.city}</TableCell>}
                                      {<TableCell>{employee.branch}</TableCell>}
                                      {<TableCell>
-                                       {employee.assigned ? <Check /> : <Close/>}
+                                       {employee.assigned === 1? <Check /> : <Close/>}
                                      </TableCell>}
                                      {
                                        <TableCell>
