@@ -12,6 +12,7 @@
     "concurrently": "^3.6.0",
     "cors": "^2.8.4",
     "express": "^4.16.3",
+    "mariadb": "^2.0.1-beta",
     "nodemon": "^1.17.5",
     "react": "^16.4.1",
     "react-color": "^2.14.1",

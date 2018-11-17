@@ -24,7 +24,6 @@ class EditDialog extends React.Component {
     changed: false,
   };
   componentWillReceiveProps(nextProps, nextState) {
-    console.log(nextProps);
     if (nextProps.employee !== null ) {
       this.setState({
         id: nextProps.employee.id,
@@ -33,7 +32,7 @@ class EditDialog extends React.Component {
         color: nextProps.employee.color,
         city: nextProps.employee.city,
         branch: nextProps.employee.branch,
-        assigned: nextProps.employee.assigned,
+        assigned: nextProps.employee.assigned === 1,
         changed: true
       })
     }
@@ -60,7 +59,6 @@ class EditDialog extends React.Component {
   };
 
   handleColorChange = color  => {
-    console.log(color.hex);
     this.setState({color: color.hex})
   };
 
